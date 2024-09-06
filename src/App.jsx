@@ -1,5 +1,3 @@
-
-
 import { useState, useCallback, useEffect, useRef } from 'react';
 import './App.css';
 
@@ -8,25 +6,28 @@ function App() {
   const [numberAllowed, setNumberAllowed] = useState(false);
   const [charAllowed, setCharAllowed] = useState(false);
   const [password, setPassword] = useState('');
+  const [uppercase, setuppercase] = useState(false);
 
   const passwordRef = useRef(null);
 
   const passwordGenerator = useCallback(() => {
     let pass = '';
-    let str = 'ABCDEFGHOJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let str = 'abcdefghijklmnopqrstuvwxyz';
     if (numberAllowed) {
       str += '0123456789';
     }
     if (charAllowed) {
       str += '@#$%^&*_-+';
     }
-
+    if (uppercase){
+      str +='ABCDEFGHOJKLMNOPQRSTUVWXYZ';
+    }
     for (let i = 1; i <= length; i++) {
       let char = Math.floor(Math.random() * str.length);
       pass += str.charAt(char);
     }
     setPassword(pass);
-  }, [length, numberAllowed, charAllowed, setPassword]);
+  }, [length, numberAllowed, charAllowed,uppercase, setPassword]);
 
   const copyPasswordToClipboard = useCallback(() => {
     passwordRef.current?.select();
@@ -35,7 +36,7 @@ function App() {
 
   useEffect(() => {
     passwordGenerator();
-  }, [length, numberAllowed, charAllowed, passwordGenerator]);
+  }, [length, numberAllowed, charAllowed,uppercase, passwordGenerator]);
 
   return (
     <>
@@ -91,6 +92,17 @@ function App() {
               className='w-5 h-5 text-blue-600 rounded focus:ring-0 cursor-pointer'
             />
             <label htmlFor='charInput' className='text-white text-lg'>Include Special Characters</label>
+          </div>
+          <div className='flex items-center gap-x-3'>
+            <input
+            type='checkbox'
+            defaultChecked={uppercase}
+            id='uppercaseAllowed'
+            onChange={() => setuppercase(prev =>!prev)}
+            className='w-5 h-5 text-blue-600 rounded focus:ring-0 cursor-pointer '
+            
+            />
+            <label htmlFor="uppercaseAllowed" className='text-white text-lg'> Include Uppercase Alphabets</label>
           </div>
         </div>
       </div>
